@@ -1,0 +1,3 @@
+[submodule "lyricsdisplay"]
+	path = lyricsdisplay
+	url = git@bitbucket.org:andreya/lyricsdisplay.git

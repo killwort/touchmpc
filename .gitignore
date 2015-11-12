@@ -1,0 +1,10 @@
+_UpgradeReport_Files
+_ReSharper.*
+TestResults
+*.user
+.svn
+obj
+bin
+Backup
+*.suo
+packages
