@@ -1,7 +1,12 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TouchMPC.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MpdHostname" Type="System.String" Scope="User">
+      <Value Profile="(Default)">srv</Value>
+    </Setting>
+    <Setting Name="MpdPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6600</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

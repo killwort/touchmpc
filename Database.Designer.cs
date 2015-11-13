@@ -53,25 +53,25 @@
             // button1
             // 
             button1.Dock = System.Windows.Forms.DockStyle.Left;
-            button1.Location = new System.Drawing.Point(100, 0);
-            button1.Margin = new System.Windows.Forms.Padding(8, 3, 3, 3);
+            button1.Location = new System.Drawing.Point(150, 0);
+            button1.Margin = new System.Windows.Forms.Padding(12, 5, 4, 5);
             button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(100, 60);
+            button1.Size = new System.Drawing.Size(150, 92);
             button1.TabIndex = 0;
             button1.Text = "Add selection to current playlist";
-            button1.UseVisualStyleBackColor = true;
+            button1.UseVisualStyleBackColor = false;
             button1.Click += new System.EventHandler(this.AddToPlaylist_Click);
             // 
             // button2
             // 
             button2.Dock = System.Windows.Forms.DockStyle.Left;
             button2.Location = new System.Drawing.Point(0, 0);
-            button2.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            button2.Margin = new System.Windows.Forms.Padding(4, 5, 12, 5);
             button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(100, 60);
+            button2.Size = new System.Drawing.Size(150, 92);
             button2.TabIndex = 1;
             button2.Text = "Clear current playlist";
-            button2.UseVisualStyleBackColor = true;
+            button2.UseVisualStyleBackColor = false;
             button2.Click += new System.EventHandler(this.ClearPlaylist_Click);
             // 
             // listView
@@ -79,10 +79,10 @@
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView.HideSelection = false;
             this.listView.LargeImageList = imageList1;
-            this.listView.Location = new System.Drawing.Point(0, 13);
-            this.listView.Margin = new System.Windows.Forms.Padding(3, 8, 3, 8);
+            this.listView.Location = new System.Drawing.Point(0, 20);
+            this.listView.Margin = new System.Windows.Forms.Padding(4, 12, 4, 12);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(622, 330);
+            this.listView.Size = new System.Drawing.Size(933, 508);
             this.listView.SmallImageList = imageList1;
             this.listView.TabIndex = 3;
             this.listView.UseCompatibleStateImageBehavior = false;
@@ -95,8 +95,9 @@
             this.lblCurrentPath.AutoSize = true;
             this.lblCurrentPath.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblCurrentPath.Location = new System.Drawing.Point(0, 0);
+            this.lblCurrentPath.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCurrentPath.Name = "lblCurrentPath";
-            this.lblCurrentPath.Size = new System.Drawing.Size(35, 13);
+            this.lblCurrentPath.Size = new System.Drawing.Size(51, 20);
             this.lblCurrentPath.TabIndex = 2;
             this.lblCurrentPath.Text = "label1";
             // 
@@ -105,20 +106,22 @@
             this.detachableControls.Controls.Add(button1);
             this.detachableControls.Controls.Add(button2);
             this.detachableControls.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.detachableControls.Location = new System.Drawing.Point(0, 343);
+            this.detachableControls.Location = new System.Drawing.Point(0, 528);
+            this.detachableControls.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.detachableControls.Name = "detachableControls";
-            this.detachableControls.Size = new System.Drawing.Size(622, 60);
+            this.detachableControls.Size = new System.Drawing.Size(933, 92);
             this.detachableControls.TabIndex = 0;
             // 
             // Database
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listView);
             this.Controls.Add(this.lblCurrentPath);
             this.Controls.Add(this.detachableControls);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Database";
-            this.Size = new System.Drawing.Size(622, 403);
+            this.Size = new System.Drawing.Size(933, 620);
             this.detachableControls.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

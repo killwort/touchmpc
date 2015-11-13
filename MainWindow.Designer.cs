@@ -54,7 +54,7 @@
             // 
             resources.ApplyResources(btnNowPlaying, "btnNowPlaying");
             btnNowPlaying.Name = "btnNowPlaying";
-            btnNowPlaying.UseVisualStyleBackColor = true;
+            btnNowPlaying.UseVisualStyleBackColor = false;
             btnNowPlaying.Click += new System.EventHandler(this.NowPlaying_Click);
             // 
             // globalControls
@@ -76,28 +76,28 @@
             // 
             resources.ApplyResources(btnNext, "btnNext");
             btnNext.Name = "btnNext";
-            btnNext.UseVisualStyleBackColor = true;
+            btnNext.UseVisualStyleBackColor = false;
             btnNext.Click += new System.EventHandler(this.Next_Click);
             // 
             // btnPlay
             // 
             resources.ApplyResources(btnPlay, "btnPlay");
             btnPlay.Name = "btnPlay";
-            btnPlay.UseVisualStyleBackColor = true;
+            btnPlay.UseVisualStyleBackColor = false;
             btnPlay.Click += new System.EventHandler(this.PlayPause_Click);
             // 
             // btnStop
             // 
             resources.ApplyResources(btnStop, "btnStop");
             btnStop.Name = "btnStop";
-            btnStop.UseVisualStyleBackColor = true;
+            btnStop.UseVisualStyleBackColor = false;
             btnStop.Click += new System.EventHandler(this.Stop_Click);
             // 
             // btnPrev
             // 
             resources.ApplyResources(btnPrev, "btnPrev");
             btnPrev.Name = "btnPrev";
-            btnPrev.UseVisualStyleBackColor = true;
+            btnPrev.UseVisualStyleBackColor = false;
             btnPrev.Click += new System.EventHandler(this.Prev_Click);
             // 
             // modeSelector
@@ -112,14 +112,14 @@
             // 
             resources.ApplyResources(this.btnLibrary, "btnLibrary");
             this.btnLibrary.Name = "btnLibrary";
-            this.btnLibrary.UseVisualStyleBackColor = true;
+            this.btnLibrary.UseVisualStyleBackColor = false;
             this.btnLibrary.Click += new System.EventHandler(this.Database_Click);
             // 
             // btnPlaylist
             // 
             resources.ApplyResources(this.btnPlaylist, "btnPlaylist");
             this.btnPlaylist.Name = "btnPlaylist";
-            this.btnPlaylist.UseVisualStyleBackColor = true;
+            this.btnPlaylist.UseVisualStyleBackColor = false;
             this.btnPlaylist.Click += new System.EventHandler(this.Playlist_Click);
             // 
             // viewUi
@@ -130,10 +130,12 @@
             // MainWindow
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.viewUi);
             this.Controls.Add(globalControls);
             this.Controls.Add(this.modeSelector);
+            this.ForeColor = System.Drawing.Color.White;
             this.Name = "MainWindow";
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
             globalControls.ResumeLayout(false);

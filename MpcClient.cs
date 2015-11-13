@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using TouchMPC.Properties;
 
 namespace TouchMPC
 {
@@ -13,7 +14,7 @@ namespace TouchMPC
         private static MpcClient _sharedClientInstance;
         public static MpcClient GetSharedClient()
         {
-            return _sharedClientInstance ?? (_sharedClientInstance = new MpcClient(new IPEndPoint(Dns.GetHostAddresses("router.mediaparts").First(), 6600)));
+            return _sharedClientInstance ?? (_sharedClientInstance = new MpcClient(new IPEndPoint(Dns.GetHostAddresses(Settings.Default.MpdHostname).First(), Settings.Default.MpdPort)));
         }
 
         private IPEndPoint ipEndPoint;
@@ -87,7 +88,7 @@ namespace TouchMPC
 
         public List<MpdFileInfo> ListFiles(string path)
         {
-            var items = Execute($"listfiles \"{path}\"");
+            var items = Execute(string.Format("listfiles \"{0}\"",path));
             if (items.Item2 != "OK")
             {
                 ConnectionFailure(false);
@@ -154,19 +155,19 @@ namespace TouchMPC
 
         public void AddToPlaylist(string path)
         {
-            if (Execute($"add \"{path.TrimStart('/')}\"").Item2 != "OK")
+            if (Execute(string.Format("add \"{0}\"", path.TrimStart('/'))).Item2 != "OK")
                 ConnectionFailure(false);
         }
 
         public void Play(int index)
         {
-            if (Execute($"play \"{index}\"").Item2 != "OK")
+            if (Execute(string.Format("play \"{0}\"",index)).Item2 != "OK")
                 ConnectionFailure(false);
         }
 
         public void RemoveFromPlaylist(int index)
         {
-            if (Execute($"delete \"{index}\"").Item2 != "OK")
+            if (Execute(string.Format("delete \"{0}\"",index)).Item2 != "OK")
                 ConnectionFailure(false);
         }
 

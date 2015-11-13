@@ -79,7 +79,10 @@ namespace TouchMPC
             }
         }
 
-        public override Control DetachableViewControlsContainer => detachableControls;
+        public override Control DetachableViewControlsContainer
+        {
+            get { return detachableControls; }
+        }
 
         private void listView_Resize(object sender, EventArgs e)
         {

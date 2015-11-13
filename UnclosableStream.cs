@@ -36,10 +36,26 @@ namespace TouchMPC
             _base.Write(buffer,offset,count);
         }
 
-        public override bool CanRead => _base.CanRead;
-        public override bool CanSeek => _base.CanSeek;
-        public override bool CanWrite => _base.CanWrite;
-        public override long Length => _base.Length;
+        public override bool CanRead
+        {
+            get { return _base.CanRead; }
+        }
+
+        public override bool CanSeek
+        {
+            get { return _base.CanSeek; }
+        }
+
+        public override bool CanWrite
+        {
+            get { return _base.CanWrite; }
+        }
+
+        public override long Length
+        {
+            get { return _base.Length; }
+        }
+
         public override long Position { get { return _base.Position; } set { _base.Position = value; } }
     }
 }

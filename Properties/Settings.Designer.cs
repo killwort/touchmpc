@@ -22,5 +22,29 @@ namespace TouchMPC.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("srv")]
+        public string MpdHostname {
+            get {
+                return ((string)(this["MpdHostname"]));
+            }
+            set {
+                this["MpdHostname"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6600")]
+        public int MpdPort {
+            get {
+                return ((int)(this["MpdPort"]));
+            }
+            set {
+                this["MpdPort"] = value;
+            }
+        }
     }
 }
