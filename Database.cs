@@ -84,10 +84,10 @@ namespace TouchMPC
         private void listView_Resize(object sender, EventArgs e)
         {
             var w = listView.Width - 20;
-            var minTiles = w/200;
-            var maxTiles = w/100;
+            var minTiles = Math.Max(1, w/200);
+            var maxTiles = Math.Max(1, w/100);
             var tileW = 2*w/(maxTiles + minTiles);
-            listView.TileSize=new Size(tileW,52);
+            listView.TileSize = new Size(tileW, 52);
         }
     }
 }

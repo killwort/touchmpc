@@ -50,6 +50,30 @@
             imageList1.Images.SetKeyName(1, "song");
             imageList1.Images.SetKeyName(2, "_parent");
             // 
+            // button1
+            // 
+            button1.Dock = System.Windows.Forms.DockStyle.Left;
+            button1.Location = new System.Drawing.Point(100, 0);
+            button1.Margin = new System.Windows.Forms.Padding(8, 3, 3, 3);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(100, 60);
+            button1.TabIndex = 0;
+            button1.Text = "Add selection to current playlist";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += new System.EventHandler(this.AddToPlaylist_Click);
+            // 
+            // button2
+            // 
+            button2.Dock = System.Windows.Forms.DockStyle.Left;
+            button2.Location = new System.Drawing.Point(0, 0);
+            button2.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(100, 60);
+            button2.TabIndex = 1;
+            button2.Text = "Clear current playlist";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += new System.EventHandler(this.ClearPlaylist_Click);
+            // 
             // listView
             // 
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -85,30 +109,6 @@
             this.detachableControls.Name = "detachableControls";
             this.detachableControls.Size = new System.Drawing.Size(622, 60);
             this.detachableControls.TabIndex = 0;
-            // 
-            // button1
-            // 
-            button1.Dock = System.Windows.Forms.DockStyle.Left;
-            button1.Location = new System.Drawing.Point(100, 0);
-            button1.Margin = new System.Windows.Forms.Padding(8, 3, 3, 3);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(100, 60);
-            button1.TabIndex = 0;
-            button1.Text = "Add selection to current playlist";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += new System.EventHandler(this.AddToPlaylist_Click);
-            // 
-            // button2
-            // 
-            button2.Dock = System.Windows.Forms.DockStyle.Left;
-            button2.Location = new System.Drawing.Point(0, 0);
-            button2.Margin = new System.Windows.Forms.Padding(3, 3, 8, 3);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(100, 60);
-            button2.TabIndex = 1;
-            button2.Text = "Clear current playlist";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += new System.EventHandler(this.ClearPlaylist_Click);
             // 
             // Database
             // 
