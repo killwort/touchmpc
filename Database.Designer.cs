@@ -76,7 +76,9 @@
             // 
             // listView
             // 
+            this.listView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.listView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView.ForeColor = System.Drawing.Color.White;
             this.listView.HideSelection = false;
             this.listView.LargeImageList = imageList1;
             this.listView.Location = new System.Drawing.Point(0, 20);
