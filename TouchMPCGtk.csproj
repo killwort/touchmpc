@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="2.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TouchMPCGtk</RootNamespace>
     <AssemblyName>TouchMPCGtk</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
@@ -38,40 +38,34 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\atk-sharp.dll</HintPath>
+    <Reference Include="atk-sharp">
       <Private>True</Private>
     </Reference>
-    <Reference Include="cairo-sharp, Version=1.10.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\cairo-sharp.dll</HintPath>
+    <Reference Include="cairo-sharp">
       <Private>True</Private>
     </Reference>
-    <Reference Include="gdk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\gdk-sharp.dll</HintPath>
+    <Reference Include="gdk-sharp">
       <Private>True</Private>
     </Reference>
-    <Reference Include="gio-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\gio-sharp.dll</HintPath>
+    <Reference Include="gio-sharp">
       <Private>True</Private>
     </Reference>
-    <Reference Include="glib-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\glib-sharp.dll</HintPath>
+    <Reference Include="glib-sharp">
       <Private>True</Private>
     </Reference>
-    <Reference Include="gtk-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\gtk-sharp.dll</HintPath>
+    <Reference Include="gtk-sharp">
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <HintPath>packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>..\TouchMPC\packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
+      <HintPath>packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -124,7 +118,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TouchMPC\lyricsdisplay\LyricsCore\LyricsCore.csproj">
+    <ProjectReference Include="lyricsdisplay\LyricsCore\LyricsCore.csproj">
       <Project>{DDD6D9E7-8D6C-4BCA-B198-42569A59BB6A}</Project>
       <Name>LyricsCore</Name>
     </ProjectReference>

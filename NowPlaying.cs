@@ -62,7 +62,7 @@ namespace TouchMPCGtk
                 if (albumArt != null && albumArt.ImageData != null)
                     try
                     {
-                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),Program.MainWindow.AllocatedHeight/3, Program.MainWindow.AllocatedHeight / 3);
+                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),480/3, 480 / 3);
                     }
                     catch
                     {
