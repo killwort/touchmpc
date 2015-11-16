@@ -11,10 +11,13 @@ namespace TouchMPC
             Bind<PlayerInteraction>().To<PlayerChangeForwarder>().InSingletonScope();
             Bind<MetadataTransformer>().To<NullMetadataTransformer>();
             Bind<LyricsCore.Database>().To<FilesystemDatabase>();
-            Bind<LyricFetcher>().To<LyricWikiLyricFetcher>();
-            Bind<LyricFetcher>().To<DarkLyricsLyricFetcher>();
-            Bind<LyricFetcher>().To<Lyrics123LyricFetcher>();
-            Bind<ArtFetcher>().To<FanartTvArtFetcher>();
+
+            Bind<Fetcher<Lyric>>().To<LyricWikiLyricFetcher>();
+            Bind<Fetcher<Lyric>>().To<DarkLyricsLyricFetcher>();
+            Bind<Fetcher<Lyric>>().To<Lyrics123LyricFetcher>();
+
+            Bind<Fetcher<AlbumArt>>().To<FanartTvArtFetcher>();
+            Bind<Fetcher<AlbumArt>>().To<MpdFilesystemArtFetcher>();
         }
     }
 }

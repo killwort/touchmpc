@@ -8,12 +8,12 @@ using TouchMPC.Properties;
 
 namespace TouchMPC
 {
-    public class MpcClient
+    public class MpdClient
     {
-        private static MpcClient _sharedClientInstance;
-        public static MpcClient GetSharedClient()
+        private static MpdClient _sharedClientInstance;
+        public static MpdClient GetSharedClient()
         {
-            return _sharedClientInstance ?? (_sharedClientInstance = new MpcClient());
+            return _sharedClientInstance ?? (_sharedClientInstance = new MpdClient());
         }
 
         //private IPEndPoint ipEndPoint;
@@ -21,12 +21,12 @@ namespace TouchMPC
         private object connection=new object();
         private object execution = new object();
         private static Encoding protocolEncoding = new UTF8Encoding(false);
-        /*public MpcClient(IPEndPoint ipEndPoint)
+        /*public MpdClient(IPEndPoint ipEndPoint)
         {
             this.ipEndPoint = ipEndPoint;
         }
 
-        public MpcClient(MpcClient @base)
+        public MpdClient(MpdClient @base)
         {
             ipEndPoint = @base.ipEndPoint;
         }*/
@@ -191,7 +191,7 @@ namespace TouchMPC
 
         public Dictionary<string, string> Status()
         {
-            return Execute("status").Item1.Select(x => x.Split(new[] {':'}, 2)).ToDictionary(x => x[0], x => x[1]);
+            return Execute("status").Item1.Select(x => x.Split(new[] {':'}, 2)).ToDictionary(x => x[0], x => x[1].TrimStart(' '));
         }
 
         public void Unpause()
@@ -236,6 +236,17 @@ namespace TouchMPC
         public void Previous()
         {
             if (Execute("previous").Item2 != "OK")
+                ConnectionFailure(false);
+        }
+
+        public void Shuffle(bool state)
+        {
+            if (Execute(string.Format("shuffle {0}",state?1:0)).Item2 != "OK")
+                ConnectionFailure(false);
+        }
+        public void Repeat(bool state)
+        {
+            if (Execute(string.Format("repeat {0}", state ? 1 : 0)).Item2 != "OK")
                 ConnectionFailure(false);
         }
     }

@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LyricsCore;
 
 namespace TouchMPC
 {
@@ -21,7 +15,7 @@ namespace TouchMPC
         {
             Task.Factory.StartNew(() =>
             {
-                var items = MpcClient.GetSharedClient().GetCurrentPlaylist();
+                var items = MpdClient.GetSharedClient().GetCurrentPlaylist();
                 var act = new Action(() =>
                 {
                     listView.SuspendLayout();
@@ -54,7 +48,7 @@ namespace TouchMPC
         {
             if (listView.SelectedIndices != null && listView.SelectedIndices.Count > 0)
             {
-                MpcClient.GetSharedClient().Play(listView.SelectedIndices[0]);
+                MpdClient.GetSharedClient().Play(listView.SelectedIndices[0]);
             }
         }
 
@@ -63,7 +57,7 @@ namespace TouchMPC
             if (listView.SelectedIndices!= null && listView.SelectedIndices.Count > 0)
             {
                 foreach (int item in listView.SelectedIndices.Cast<int>().OrderByDescending(x=>x))
-                    MpcClient.GetSharedClient().RemoveFromPlaylist(item);
+                    MpdClient.GetSharedClient().RemoveFromPlaylist(item);
                 Activated();
             }
         }

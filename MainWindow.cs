@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
-using System.Net;
 using System.Windows.Forms;
 using LyricsCore;
 using Ninject;
@@ -16,10 +14,25 @@ namespace TouchMPC
         public MainWindow()
         {
             InitializeComponent();
+            nowPlayingPage.StateChanged += NowPlayingPage_StateChanged;
             Program.Kernel.Bind<Display>().ToConstant(nowPlayingPage.LyricsDisplay);
             Program.Kernel.Get<Engine>();
             nowPlayingPage.UpdateStatus();
             
+        }
+
+        private bool selfSetting = false;
+        private void NowPlayingPage_StateChanged(object sender, System.Collections.Generic.Dictionary<string, string> e)
+        {
+            selfSetting = true;
+            string val;
+            if (!e.TryGetValue("repeat", out val)) val = "0";
+            cbRepeat.Checked = val != "0";
+            if (!e.TryGetValue("shuffle", out val)) val = "0";
+            cbShuffle.Checked = val != "0";
+            if (!e.TryGetValue("state", out val)) val = "stop";
+            btnPlay.Text = val == "play" ? "Pause" : "Play";
+            selfSetting = false;
         }
 
         private void SwitchPage(Control newPage)
@@ -59,42 +72,61 @@ namespace TouchMPC
 
         private void Next_Click(object sender, EventArgs e)
         {
-            MpcClient.GetSharedClient().Next();
+            var status = MpdClient.GetSharedClient().Status();
+            string state;
+            if (!status.TryGetValue("state", out state))
+                state = "stop";
+            if (state != "play")
+                PlayPause_Click(sender, e);
+            else
+                MpdClient.GetSharedClient().Next();
         }
 
         private void PlayPause_Click(object sender, EventArgs e)
         {
-            var status = MpcClient.GetSharedClient().Status();
+            var status = MpdClient.GetSharedClient().Status();
             string state;
             if (!status.TryGetValue("state", out state))
                 state = "stop";
             switch (state)
             {
                 case "pause":
-                    MpcClient.GetSharedClient().Unpause();
+                    MpdClient.GetSharedClient().Unpause();
                     break;
                 case "play":
-                    MpcClient.GetSharedClient().Pause();
+                    MpdClient.GetSharedClient().Pause();
                     break;
                 default:
-                    MpcClient.GetSharedClient().Play();
+                    MpdClient.GetSharedClient().Play();
                     break;
             }
         }
 
         private void Prev_Click(object sender, EventArgs e)
         {
-            MpcClient.GetSharedClient().Previous();
+            MpdClient.GetSharedClient().Previous();
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            MpcClient.GetSharedClient().Stop();
+            MpdClient.GetSharedClient().Stop();
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)
         {
             SwitchPage(nowPlayingPage);
+        }
+
+        private void cbShuffle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selfSetting) return;
+            MpdClient.GetSharedClient().Shuffle(cbShuffle.Checked);
+        }
+
+        private void cbRepeat_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selfSetting) return;
+            MpdClient.GetSharedClient().Repeat(cbRepeat.Checked);
         }
     }
 }

@@ -148,7 +148,7 @@
     <value>modeSelector</value>
   </data>
   <data name="&gt;&gt;btnNowPlaying.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <metadata name="globalControls.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
@@ -207,9 +207,6 @@
   <data name="&gt;&gt;btnNext.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <metadata name="btnPlay.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>False</value>
-  </metadata>
   <data name="btnPlay.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Right</value>
   </data>
@@ -321,6 +318,78 @@
   <data name="&gt;&gt;globalControls.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="&gt;&gt;cbRepeat.Name" xml:space="preserve">
+    <value>cbRepeat</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Name" xml:space="preserve">
+    <value>cbShuffle</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;btnLibrary.Name" xml:space="preserve">
+    <value>btnLibrary</value>
+  </data>
+  <data name="&gt;&gt;btnLibrary.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnLibrary.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;btnLibrary.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;btnPlaylist.Name" xml:space="preserve">
+    <value>btnPlaylist</value>
+  </data>
+  <data name="&gt;&gt;btnPlaylist.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnPlaylist.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;btnPlaylist.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="modeSelector.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="modeSelector.Location" type="System.Drawing.Point, System.Drawing">
+    <value>622, 0</value>
+  </data>
+  <data name="modeSelector.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 441</value>
+  </data>
+  <data name="modeSelector.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;modeSelector.Name" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;modeSelector.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;modeSelector.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;modeSelector.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="btnLibrary.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
   </data>
@@ -346,7 +415,7 @@
     <value>modeSelector</value>
   </data>
   <data name="&gt;&gt;btnLibrary.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="btnPlaylist.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Left, Right</value>
@@ -373,31 +442,7 @@
     <value>modeSelector</value>
   </data>
   <data name="&gt;&gt;btnPlaylist.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="modeSelector.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="modeSelector.Location" type="System.Drawing.Point, System.Drawing">
-    <value>622, 0</value>
-  </data>
-  <data name="modeSelector.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 441</value>
-  </data>
-  <data name="modeSelector.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;modeSelector.Name" xml:space="preserve">
-    <value>modeSelector</value>
-  </data>
-  <data name="&gt;&gt;modeSelector.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;modeSelector.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;modeSelector.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="viewUi.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -421,6 +466,69 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;viewUi.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="cbShuffle.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="cbShuffle.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 391</value>
+  </data>
+  <data name="cbShuffle.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 43</value>
+  </data>
+  <data name="cbShuffle.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="cbShuffle.Text" xml:space="preserve">
+    <value>Shuffle</value>
+  </data>
+  <data name="cbShuffle.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Name" xml:space="preserve">
+    <value>cbShuffle</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;cbShuffle.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="cbRepeat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Left, Right</value>
+  </data>
+  <data name="cbRepeat.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="cbRepeat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 342</value>
+  </data>
+  <data name="cbRepeat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 43</value>
+  </data>
+  <data name="cbRepeat.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="cbRepeat.Text" xml:space="preserve">
+    <value>Repeat</value>
+  </data>
+  <data name="cbRepeat.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.Name" xml:space="preserve">
+    <value>cbRepeat</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.Parent" xml:space="preserve">
+    <value>modeSelector</value>
+  </data>
+  <data name="&gt;&gt;cbRepeat.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

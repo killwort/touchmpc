@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,7 +20,7 @@ namespace TouchMPC
         {
             Task.Factory.StartNew(() =>
             {
-                var filelist = MpcClient.GetSharedClient().ListFiles(path);
+                var filelist = MpdClient.GetSharedClient().ListFiles(path);
                 var act=new Action(() =>
                 {
                     listView.SuspendLayout();
@@ -62,7 +58,7 @@ namespace TouchMPC
 
         private void ClearPlaylist_Click(object sender, EventArgs e)
         {
-            MpcClient.GetSharedClient().ClearPlaylist();
+            MpdClient.GetSharedClient().ClearPlaylist();
         }
 
         private void AddToPlaylist_Click(object sender, EventArgs e)
@@ -74,7 +70,7 @@ namespace TouchMPC
                     var info = item.Tag as MpdFileInfo;
                     if (info == null||info.Type==MpdFileInfo.TypeParent)
                         continue;
-                    MpcClient.GetSharedClient().AddToPlaylist(info.Path);
+                    MpdClient.GetSharedClient().AddToPlaylist(info.Path);
                 }
             }
         }

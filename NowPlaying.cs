@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using LyricsCore;
@@ -17,7 +17,7 @@ namespace TouchMPC
             InitializeComponent();
             new Thread(() =>
             {
-                var myClient = new MpcClient(MpcClient.GetSharedClient());
+                var myClient = new MpdClient();
                 while (true)
                 {
                     myClient.Idle();
@@ -39,27 +39,27 @@ namespace TouchMPC
                 _nowPlaying.DisplayLyrics(lyric);
             }
 
-            public override void DoDisplay(Art art)
+            public override void DoDisplay(AlbumArt albumArt)
             {
-                _nowPlaying.DisplayAlbumArt(art);
+                _nowPlaying.DisplayAlbumArt(albumArt);
             }
         }
 
-        private void DisplayAlbumArt(Art art)
+        private void DisplayAlbumArt(AlbumArt albumArt)
         {
             var act = new Action(() =>
             {
-                if (art != null&&art.AlbumArt!=null)
+                if (albumArt != null&&albumArt.ImageData!=null)
                     try
                     {
-                        albumArt.Image = Image.FromStream(new MemoryStream(art.AlbumArt));
+                        this.albumArt.Image = Image.FromStream(new MemoryStream(albumArt.ImageData));
                     }
                     catch
                     {
-                        albumArt.Image = null;
+                        this.albumArt.Image = null;
                     }
                 else
-                    albumArt.Image = null;
+                    this.albumArt.Image = null;
             });
             if (InvokeRequired)
                 Invoke(act);
@@ -85,11 +85,13 @@ namespace TouchMPC
                 Invoke(new Action(UpdateStatus));
                 return;
             }
-            var rv = MpcClient.GetSharedClient().CurrentSong()??new MpdFileInfo();
+            var rv = MpdClient.GetSharedClient().CurrentSong()??new MpdFileInfo();
             lblAlbum.Text = rv.Album;
             lblArtist.Text = rv.Artist;
             lblTitle.Text = rv.Title;
-            ((PlayerChangeForwarder) Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album, rv.Title);
+            ((PlayerChangeForwarder) Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album,
+                rv.Title, rv.Path);
+            OnStateChanged(MpdClient.GetSharedClient().Status());
         }
         private Point? grabPoint;
         private int grabScroll;
@@ -122,10 +124,18 @@ namespace TouchMPC
             pnlScroll.Focus();
         }
 
+        public event EventHandler<Dictionary<string, string>> StateChanged;
+
         private void NowPlaying_Resize(object sender, EventArgs e)
         {
             pnlStatic.Height = Width/4;
             albumArt.Width = Width/4;
+        }
+
+        protected virtual void OnStateChanged(Dictionary<string, string> e)
+        {
+            var handler = StateChanged;
+            if (handler != null) handler(this, e);
         }
     }
 }

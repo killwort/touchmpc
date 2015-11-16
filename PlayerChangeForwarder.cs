@@ -5,7 +5,7 @@ namespace TouchMPC
 {
     class PlayerChangeForwarder:PlayerInteraction
     {
-        public void PushSongChange(string artist,string album,string title)
+        public void PushSongChange(string artist,string album,string title,string fsPath)
         {
             Task.Factory.StartNew(() =>
             {
@@ -13,7 +13,8 @@ namespace TouchMPC
                 {
                     Artist = artist,
                     Album = album,
-                    Title = title
+                    Title = title,
+                    FilesystemPath = fsPath
                 }));
             });
         }

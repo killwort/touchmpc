@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using log4net.Config;
 using LyricsCore.Configuration;
 using Ninject;
-using Ninject.Syntax;
 
 namespace TouchMPC
 {
@@ -24,6 +20,16 @@ namespace TouchMPC
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            try
+            {
+                MpdClient.GetSharedClient().Status();
+            }
+            catch (Exception e)
+            {
+                var wnd = new SettingsWindow {LatestException = e};
+                Application.Run(wnd);
+                if (wnd.DialogResult != DialogResult.OK) return;
+            }
             Application.Run(new MainWindow());
         }
     }
