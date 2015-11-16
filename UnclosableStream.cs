@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
     class UnclosableStream : Stream
     {

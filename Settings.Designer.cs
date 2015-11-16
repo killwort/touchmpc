@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TouchMPC.Properties {
+namespace TouchMPCGtk {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,7 +25,7 @@ namespace TouchMPC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("srv")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string MpdHostname {
             get {
                 return ((string)(this["MpdHostname"]));
@@ -44,6 +44,18 @@ namespace TouchMPC.Properties {
             }
             set {
                 this["MpdPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NowPlaying")]
+        public string LastPage {
+            get {
+                return ((string)(this["LastPage"]));
+            }
+            set {
+                this["LastPage"] = value;
             }
         }
     }

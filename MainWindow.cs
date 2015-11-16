@@ -1,24 +1,61 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Forms;
-using LyricsCore;
+using Gtk;
 using Ninject;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
-    public partial class MainWindow : Form
+    partial class MainWindow : Window
     {
         private NowPlaying nowPlayingPage = new NowPlaying();
-        private Database databasePage=new Database();
+        private Database databasePage = new Database();
         private Playlist playlistPage = new Playlist();
-        public MainWindow()
+        private Image playImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("play"))));
+        private Image pauseImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("pause"))));
+
+        public MainWindow() : base(WindowType.Toplevel)
         {
-            InitializeComponent();
-            nowPlayingPage.StateChanged += NowPlayingPage_StateChanged;
-            Program.Kernel.Bind<Display>().ToConstant(nowPlayingPage.LyricsDisplay);
-            Program.Kernel.Get<Engine>();
+            Build();
+            nowPlayingPage.PlayStateChanged += NowPlayingPage_StateChanged;
+            nowPlayingPage.SongChanged += NowPlayingPage_SongChanged;
+
+            PrevButton.Image("prev");
+            NextButton.Image("next");
+            StopButton.Image("stop");
+            PlayButton.Label = null;
+
+            NextButton.Clicked += Next_Click;
+            StopButton.Clicked +=Stop_Click;
+            PlayButton.Clicked += PlayPause_Click;
+            PrevButton.Clicked += Prev_Click;
+            NowPlayingButton.Clicked += NowPlaying_Click;
+            DatabaseButton.Clicked += Database_Click;
+            PlaylistButton.Clicked += Playlist_Click;
+            ShuffleToggle.Clicked += cbShuffle_CheckedChanged;
+            RepeatToggle.Clicked += cbRepeat_CheckedChanged;
+
+            Program.Kernel.Bind<LyricsCore.Display>().ToConstant(nowPlayingPage.LyricsDisplay);
+            Program.Kernel.Get<LyricsCore.Engine>();
             nowPlayingPage.UpdateStatus();
-            
+            switch (TouchMPCGtk.Settings.Default.LastPage)
+            {
+                case "Database":
+                    SwitchPage(databasePage);
+                    break;
+                case "Playlist":
+                    SwitchPage(playlistPage);
+                    break;
+                default:
+                    SwitchPage(nowPlayingPage);
+                    break;
+
+            }
+        }
+
+        private void NowPlayingPage_SongChanged(object sender, MpdFileInfo e)
+        {
+            playlistPage.Follow(e);
+            Title = string.Format("{0} from {1} by {2}", e.Title, e.Album, e.Artist);
         }
 
         private bool selfSetting = false;
@@ -27,33 +64,36 @@ namespace TouchMPC
             selfSetting = true;
             string val;
             if (!e.TryGetValue("repeat", out val)) val = "0";
-            cbRepeat.Checked = val != "0";
-            if (!e.TryGetValue("shuffle", out val)) val = "0";
-            cbShuffle.Checked = val != "0";
+            RepeatToggle.Active = val != "0";
+            if (!e.TryGetValue("random", out val)) val = "0";
+            ShuffleToggle.Active = val != "0";
             if (!e.TryGetValue("state", out val)) val = "stop";
-            btnPlay.Text = val == "play" ? "Pause" : "Play";
+            PlayButton.TooltipText = val == "play" ? "Pause" : "Play";
+            PlayButton.Image=val=="play"?pauseImage:playImage;
             selfSetting = false;
         }
-
-        private void SwitchPage(Control newPage)
+        private void SwitchPage(Widget newPage)
         {
             var viewBase = newPage as ViewBase;
-            viewUi.SuspendLayout();
-            viewUi.Controls.Clear();
-            foreach (var view in viewUi.Controls.OfType<ViewBase>())
+
+            foreach (var view in MainUiContainer.Children.OfType<ViewBase>())
                 view.Deactivated();
-            viewUi.Controls.Add(newPage);
-            newPage.Dock = DockStyle.Fill;
-            viewUi.ResumeLayout();
-            viewControls.SuspendLayout();
-            viewControls.Controls.Clear();
-            if (viewBase!=null)
+            if (MainUiContainer.Child != null)
+                MainUiContainer.Remove(MainUiContainer.Child);
+            MainUiContainer.Add(newPage);
+            newPage.ShowAll();
+
+            if(ButtonsUiContainer.Child!=null)
+                ButtonsUiContainer.Remove(ButtonsUiContainer.Child);
+            
+            if (viewBase != null)
             {
-                viewControls.Controls.Add(viewBase.DetachableViewControlsContainer);
-                viewBase.DetachableViewControlsContainer.Dock=DockStyle.Fill;
+                ButtonsUiContainer.Add(viewBase.DetachableViewControlsContainer);
                 viewBase.Activated();
             }
-            viewControls.ResumeLayout();
+
+            TouchMPCGtk.Settings.Default.LastPage = newPage.GetType().Name;
+            TouchMPCGtk.Settings.Default.Save();
         }
         private void NowPlaying_Click(object sender, EventArgs e)
         {
@@ -120,13 +160,13 @@ namespace TouchMPC
         private void cbShuffle_CheckedChanged(object sender, EventArgs e)
         {
             if (selfSetting) return;
-            MpdClient.GetSharedClient().Shuffle(cbShuffle.Checked);
+            MpdClient.GetSharedClient().Random(ShuffleToggle.Active);
         }
 
         private void cbRepeat_CheckedChanged(object sender, EventArgs e)
         {
             if (selfSetting) return;
-            MpdClient.GetSharedClient().Repeat(cbRepeat.Checked);
+            MpdClient.GetSharedClient().Repeat(RepeatToggle.Active);
         }
     }
 }

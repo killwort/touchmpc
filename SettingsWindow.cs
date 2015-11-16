@@ -1,57 +1,56 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using TouchMPC.Properties;
+using Gtk;
+using TouchMPC;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
-    public partial class SettingsWindow : Form
+    partial class SettingsWindow:Gtk.Window
     {
-        public SettingsWindow()
+        public SettingsWindow() : base(WindowType.Toplevel)
         {
-            InitializeComponent();
-            txHost.Text = Settings.Default.MpdHostname;
-            nPort.Value = Settings.Default.MpdPort;
+            Build();
+            ConnectButton.Clicked += OnConnectButtonClicked;
+            CloseButton.Clicked += OnExitButtonClicked;
+
+            Host.Text = TouchMPCGtk.Settings.Default.MpdHostname;
+            PortNumber.Value= TouchMPCGtk.Settings.Default.MpdPort;
         }
 
         public Exception LatestException
         {
-            set { lblError.Text = value.Message; }
+            set { ErrorText.Text = value.Message; }
         }
-
-        private void bExit_Click(object sender, EventArgs e)
+        private void OnConnectButtonClicked(object sender, EventArgs e)
         {
-            DialogResult=DialogResult.Cancel;
-            Close();
-        }
-
-        private void bConnect_Click(object sender, EventArgs e)
-        {
-            Enabled = false;
-            Settings.Default.MpdPort =(int) nPort.Value;
-            Settings.Default.MpdHostname = txHost.Text;
-            Settings.Default.Save();
+            Sensitive = false;
+            TouchMPCGtk.Settings.Default.MpdPort = (int)PortNumber.Value;
+            TouchMPCGtk.Settings.Default.MpdHostname = Host.Text;
+            TouchMPCGtk.Settings.Default.Save();
 
             Task.Factory.StartNew(() =>
             {
                 try
                 {
                     MpdClient.GetSharedClient().Status();
-                    Invoke(new Action(() =>
-                    {
-                        DialogResult=DialogResult.OK;
-                        Close();
-                    }));
+                    Result = true;
+                    Application.Invoke(delegate { Destroy();});
                 }
                 catch (Exception ex)
                 {
-                    Invoke(new Action(() =>
-                    {
-                        LatestException = ex;
-                        Enabled = true;
-                    }));
+                    LatestException = ex;
+                    Application.Invoke(delegate { Sensitive = true; });
                 }
             });
+        }
+
+        public bool Result = false;
+        private void OnExitButtonClicked(object sender, EventArgs e)
+        {
+            Destroy();
         }
     }
 }

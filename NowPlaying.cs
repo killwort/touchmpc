@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
+using Gdk;
+using Gtk;
 using LyricsCore;
 using Ninject;
+using TouchMPC;
+using TouchMPCGtk;
+using Display = LyricsCore.Display;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
-    public partial class NowPlaying : UserControl
+    partial class NowPlaying : ViewBase
     {
         public NowPlaying()
         {
             LyricsDisplay = new DisplayProxy(this);
-            InitializeComponent();
+            Build();
             new Thread(() =>
             {
                 var myClient = new MpdClient();
@@ -23,13 +26,15 @@ namespace TouchMPC
                     myClient.Idle();
                     UpdateStatus();
                 }
-            }) {IsBackground = true}.Start();
+            })
+            {IsBackground = true}.Start();
         }
+
         private class DisplayProxy : Display
         {
-            private readonly NowPlaying _nowPlaying;
+            private readonly TouchMPCGtk.NowPlaying _nowPlaying;
 
-            public DisplayProxy(NowPlaying nowPlaying)
+            public DisplayProxy(TouchMPCGtk.NowPlaying nowPlaying)
             {
                 _nowPlaying = nowPlaying;
             }
@@ -47,95 +52,70 @@ namespace TouchMPC
 
         private void DisplayAlbumArt(AlbumArt albumArt)
         {
-            var act = new Action(() =>
+            Application.Invoke(delegate
             {
-                if (albumArt != null&&albumArt.ImageData!=null)
+                if (Art.Pixbuf != null)
+                {
+                    Art.Pixbuf.Dispose();
+                    Art.Pixbuf = null;
+                }
+                if (albumArt != null && albumArt.ImageData != null)
                     try
                     {
-                        this.albumArt.Image = Image.FromStream(new MemoryStream(albumArt.ImageData));
+                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),Program.MainWindow.AllocatedHeight/3, Program.MainWindow.AllocatedHeight / 3);
                     }
                     catch
                     {
-                        this.albumArt.Image = null;
                     }
-                else
-                    this.albumArt.Image = null;
             });
-            if (InvokeRequired)
-                Invoke(act);
-            else
-                act();
         }
 
         private void DisplayLyrics(Lyric lyric)
         {
-            var act = new Action(() => lLyrics.Text = lyric.Text.Replace("\n", "\r\n"));
-            if (InvokeRequired)
-                Invoke(act);
-            else
-                act();
+            Application.Invoke(delegate
+            {
+                Lyrics.Buffer.Text = lyric.Text.Replace("\n", "\r\n");
+            });
         }
 
         public Display LyricsDisplay { get; private set; }
 
         public void UpdateStatus()
         {
-            if (InvokeRequired)
+            Application.Invoke(delegate
             {
-                Invoke(new Action(UpdateStatus));
-                return;
-            }
-            var rv = MpdClient.GetSharedClient().CurrentSong()??new MpdFileInfo();
-            lblAlbum.Text = rv.Album;
-            lblArtist.Text = rv.Artist;
-            lblTitle.Text = rv.Title;
-            ((PlayerChangeForwarder) Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album,
-                rv.Title, rv.Path);
-            OnStateChanged(MpdClient.GetSharedClient().Status());
+
+                var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
+                Album.Text = rv.Album;
+                Artist.Text = rv.Artist;
+                Title.Text = rv.Title;
+                ((PlayerChangeForwarder) Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album,
+                    rv.Title, rv.Path);
+                Art.Pixbuf = null;
+                Lyrics.Buffer.Text = "";
+                OnPlayStateChanged(MpdClient.GetSharedClient().Status());
+                OnSongChanged(rv);
+            });
         }
-        private Point? grabPoint;
-        private int grabScroll;
-
-        private void lLyrics_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                grabPoint = e.Location;
-                grabScroll = pnlScroll.VerticalScroll.Value;
-                ((Control)sender).Capture = true;
-            }
-
-        }
-
-        private void lLyrics_MouseUp(object sender, MouseEventArgs e)
-        {
-            grabPoint = null;
-            ((Control)sender).Capture = false;
-
-        }
-
-        private void lLyrics_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (grabPoint.HasValue)
-            {
-                var newScroll = grabScroll - (e.Location.Y - grabPoint.Value.Y);
-                pnlScroll.VerticalScroll.Value = Math.Max(Math.Min(pnlScroll.VerticalScroll.Maximum, newScroll), pnlScroll.VerticalScroll.Minimum);
-            }
-            pnlScroll.Focus();
-        }
-
-        public event EventHandler<Dictionary<string, string>> StateChanged;
-
+        public event EventHandler<Dictionary<string, string>> PlayStateChanged;
+        public event EventHandler<MpdFileInfo> SongChanged;
         private void NowPlaying_Resize(object sender, EventArgs e)
         {
-            pnlStatic.Height = Width/4;
-            albumArt.Width = Width/4;
+            /*pnlStatic.Height = Width / 4;
+            albumArt.Width = Width / 4;*/
         }
 
-        protected virtual void OnStateChanged(Dictionary<string, string> e)
+        protected virtual void OnPlayStateChanged(Dictionary<string, string> e)
         {
-            var handler = StateChanged;
+            var handler = PlayStateChanged;
             if (handler != null) handler(this, e);
+        }
+
+        protected virtual void OnSongChanged(MpdFileInfo e)
+        {
+            var handler = SongChanged;
+            if (handler != null)
+                handler(this, e);
         }
     }
 }

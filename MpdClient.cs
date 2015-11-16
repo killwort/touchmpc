@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using TouchMPC.Properties;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
     public class MpdClient
     {
@@ -239,14 +238,20 @@ namespace TouchMPC
                 ConnectionFailure(false);
         }
 
-        public void Shuffle(bool state)
+        public void Random(bool state)
         {
-            if (Execute(string.Format("shuffle {0}",state?1:0)).Item2 != "OK")
+            if (Execute(string.Format("random {0}",state?1:0)).Item2 != "OK")
                 ConnectionFailure(false);
         }
         public void Repeat(bool state)
         {
             if (Execute(string.Format("repeat {0}", state ? 1 : 0)).Item2 != "OK")
+                ConnectionFailure(false);
+        }
+
+        public void PlayId(string id)
+        {
+            if (Execute(string.Format("playid {0}", id)).Item2 != "OK")
                 ConnectionFailure(false);
         }
     }

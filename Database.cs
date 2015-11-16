@@ -1,18 +1,46 @@
-﻿using System;
-using System.Drawing;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using Gdk;
+using Gtk;
+using Action = Gtk.Action;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
-    public partial class Database : ViewBase
+    partial class Database : ViewBase
     {
         private string currentPath = "/";
-        
+        private ListStore ContentsList;
+        private HBox detachableButtons;
+        private Dictionary<string, Pixbuf> icons;
         public Database()
         {
-            InitializeComponent();
+            icons = new Dictionary<string, Pixbuf>
+            {
+                {"directory", new Pixbuf(new MemoryStream((byte[])Resources.ResourceManager.GetObject("folder")))},
+                {"file", new Pixbuf(new MemoryStream((byte[])Resources.ResourceManager.GetObject("song")))},
+                {"_parent", new Pixbuf(new MemoryStream((byte[])Resources.ResourceManager.GetObject("up")))},
+            };
+            Build();
+
+            ContentsList = new ListStore(typeof(string), typeof(Pixbuf), typeof(MpdFileInfo));
+            Contents.Model = ContentsList;
+            Contents.TextColumn = 0;
+            Contents.PixbufColumn = 1;
+            Contents.ItemOrientation=Orientation.Horizontal;
+            Contents.ItemActivated += listView_ItemActivate;
+
+            detachableButtons = new HBox(false, 6);
+            var b = new Button { Label = "Clear playlist" };
+            b.Clicked += ClearPlaylist_Click;
+            detachableButtons.Add(b);
+            b = new Button { Label = "Add to playlist" };
+            b.Clicked += AddToPlaylist_Click;
+            detachableButtons.Add(b);
+            detachableButtons.ShowAll();
+
             NavigateTo(currentPath);
         }
 
@@ -21,72 +49,59 @@ namespace TouchMPC
             Task.Factory.StartNew(() =>
             {
                 var filelist = MpdClient.GetSharedClient().ListFiles(path);
-                var act=new Action(() =>
-                {
-                    listView.SuspendLayout();
-                    listView.BeginUpdate();
-                    listView.Items.Clear();
-                    listView.Items.AddRange(filelist
+                Application.Invoke(delegate {
+                    ContentsList.Clear();
+                    foreach (var item in filelist
                         .OrderBy(x => x.Type)
-                        .ThenBy(x => x.Name)
-                        .Select(x => new ListViewItem(x.Name, x.Type)
-                        {
-                            Tag = x
-                        }).ToArray());
-                    lblCurrentPath.Text = path;
+                        .ThenBy(x => x.Name))
+                    {
+                        ContentsList.AppendValues(item.Name, icons[item.Type], item);
+                    }
+                    
+                    CurrentPath.Text = path;
                     currentPath = path;
-                    listView.EndUpdate();
-                    listView.ResumeLayout();
                 });
-                if (InvokeRequired)
-                    Invoke(act);
-                else act();
             });
         }
 
-        private void listView_ItemActivate(object sender, EventArgs e)
+        private void listView_ItemActivate(object sender, ItemActivatedArgs e)
         {
-            if (listView.SelectedItems != null && listView.SelectedItems.Count > 0)
-            {
-                var info = listView.SelectedItems[0].Tag as MpdFileInfo;
-                if (info == null)
-                    return;
-                if(info.Type== MpdFileInfo.TypeFolder || info.Type== MpdFileInfo.TypeParent)
-                    NavigateTo(info.Path);
-            }
+            TreeIter iter;
+            ContentsList.GetIter(out iter, e.Path);
+            var info = (MpdFileInfo) ContentsList.GetValue(iter, 2);
+            if (info == null)
+                return;
+            if (info.Type == MpdFileInfo.TypeFolder || info.Type == MpdFileInfo.TypeParent)
+                NavigateTo(info.Path);
         }
+
+        public override Widget DetachableViewControlsContainer
+        {
+            get { return detachableButtons; }
+        }
+
 
         private void ClearPlaylist_Click(object sender, EventArgs e)
         {
             MpdClient.GetSharedClient().ClearPlaylist();
         }
 
+
         private void AddToPlaylist_Click(object sender, EventArgs e)
         {
-            if (listView.SelectedItems != null && listView.SelectedItems.Count > 0)
+            
+            if (Contents.SelectedItems != null && Contents.SelectedItems.Length> 0)
             {
-                foreach (ListViewItem item in listView.SelectedItems)
+                foreach (var item in Contents.SelectedItems)
                 {
-                    var info = item.Tag as MpdFileInfo;
-                    if (info == null||info.Type==MpdFileInfo.TypeParent)
+                    TreeIter iter;
+                    ContentsList.GetIter(out iter, item);
+                    var info = (MpdFileInfo)ContentsList.GetValue(iter,2);
+                    if (info == null || info.Type == MpdFileInfo.TypeParent)
                         continue;
                     MpdClient.GetSharedClient().AddToPlaylist(info.Path);
                 }
             }
-        }
-
-        public override Control DetachableViewControlsContainer
-        {
-            get { return detachableControls; }
-        }
-
-        private void listView_Resize(object sender, EventArgs e)
-        {
-            var w = listView.Width - 20;
-            var minTiles = Math.Max(1, w/200);
-            var maxTiles = Math.Max(1, w/100);
-            var tileW = 2*w/(maxTiles + minTiles);
-            listView.TileSize = new Size(tileW, 52);
         }
     }
 }

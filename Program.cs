@@ -1,36 +1,67 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Gtk;
 using log4net.Config;
 using LyricsCore.Configuration;
 using Ninject;
+using TouchMPC;
+using Action = System.Action;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
-    static class Program
+    class Program
     {
         public static IKernel Kernel;
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static MainWindow MainWindow;
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             XmlConfigurator.Configure();
-            Kernel=new StandardKernel(new LyricsModule(),new TouchMPCModule());
+            Kernel = new StandardKernel(new LyricsModule(), new TouchMPCModule());
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Init();
+
+            Action run = () =>
+            {
+                var win=new MainWindow();
+                MainWindow = win;
+                win.Show();
+                win.Destroyed += (s, ev) =>
+                {
+                    Application.Quit();
+                };
+            };
+
+            Exception errorConnect = null;
             try
             {
                 MpdClient.GetSharedClient().Status();
             }
             catch (Exception e)
             {
-                var wnd = new SettingsWindow {LatestException = e};
-                Application.Run(wnd);
-                if (wnd.DialogResult != DialogResult.OK) return;
+                errorConnect = e;
             }
-            Application.Run(new MainWindow());
+            if (errorConnect != null)
+            {
+                var win = new SettingsWindow {LatestException = errorConnect};
+                win.Show();
+                win.Destroyed += (s, ev) =>
+                {
+                    if(win.Result)
+                        run();
+                    else
+                        Application.Quit();
+                };
+            }
+            else
+            {
+                run();
+            }
+            Application.Run();
+
         }
     }
 }
