@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using LyricsCore;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
     class PlayerChangeForwarder:PlayerInteraction
     {

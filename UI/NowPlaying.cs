@@ -139,10 +139,10 @@ namespace TouchMPCGtk
             global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.vbox4[this.GtkScrolledWindow]));
             w11.Position = 1;
             this.Add(this.vbox4);
-            if ((this.Child != null))
+            /*if ((this.Child != null))
             {
                 this.Child.ShowAll();
-            }
+            }*/
             this.Hide();
         }
 

@@ -29,7 +29,7 @@ namespace TouchMPCGtk
             Contents.Model = ContentsList;
             Contents.TextColumn = 0;
             Contents.PixbufColumn = 1;
-//            Contents.ItemOrientation=Orientation.Horizontal;
+            Contents.Orientation=Orientation.Horizontal;
             Contents.ItemActivated += listView_ItemActivate;
 
             detachableButtons = new HBox(false, 6);

@@ -18,7 +18,6 @@ namespace TouchMPCGtk
             Build();
             nowPlayingPage.PlayStateChanged += NowPlayingPage_StateChanged;
             nowPlayingPage.SongChanged += NowPlayingPage_SongChanged;
-
             PrevButton.Image("prev");
             NextButton.Image("next");
             StopButton.Image("stop");

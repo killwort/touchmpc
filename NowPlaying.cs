@@ -6,8 +6,6 @@ using Gdk;
 using Gtk;
 using LyricsCore;
 using Ninject;
-using TouchMPC;
-using TouchMPCGtk;
 using Display = LyricsCore.Display;
 
 namespace TouchMPCGtk

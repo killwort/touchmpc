@@ -21,10 +21,10 @@ namespace TouchMPCGtk
             this.Contents.Name = "Contents";
             this.GtkScrolledWindow.Add(this.Contents);
             this.Add(this.GtkScrolledWindow);
-            if ((this.Child != null))
+            /*if ((this.Child != null))
             {
                 this.Child.ShowAll();
-            }
+            }*/
             this.Hide();
         }
 

@@ -2,7 +2,7 @@
 using LyricsCore.Impl;
 using Ninject.Modules;
 
-namespace TouchMPC
+namespace TouchMPCGtk
 {
     class TouchMPCModule:NinjectModule
     {

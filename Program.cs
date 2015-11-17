@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GLib;
 using Gtk;
 using log4net.Config;
 using LyricsCore.Configuration;
 using Ninject;
-using TouchMPC;
 using Action = System.Action;
 
 namespace TouchMPCGtk
