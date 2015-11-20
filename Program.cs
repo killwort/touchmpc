@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GLib;
 using Gtk;
 using log4net.Config;
-using LyricsCore.Configuration;
+using MusicData.Configuration;
 using Ninject;
 using Action = System.Action;
 

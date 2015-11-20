@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using LyricsCore;
+using MusicData;
 
 namespace TouchMPCGtk
 {
@@ -9,13 +9,13 @@ namespace TouchMPCGtk
         {
             Task.Factory.StartNew(() =>
             {
-                OnSongChanged(new SongEventArgs(new Song
+                OnSongChanged(new Song
                 {
                     Artist = artist,
                     Album = album,
                     Title = title,
                     FilesystemPath = fsPath
-                }));
+                });
             });
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Atk;
 
 namespace TouchMPCGtk
 {
@@ -37,6 +38,8 @@ namespace TouchMPCGtk
         private global::Gtk.CheckButton RepeatToggle;
 
         private global::Gtk.CheckButton ShuffleToggle;
+
+        private Gtk.Button LogButton;
 
         protected virtual void Build()
         {
@@ -157,6 +160,18 @@ namespace TouchMPCGtk
             w12.Position = 2;
             w12.Expand = false;
             w12.Fill = false;
+            // Container child
+            LogButton = new global::Gtk.Button();
+            this.LogButton.CanFocus = true;
+            this.LogButton.Name = "LogButton";
+            this.LogButton.UseUnderline = true;
+            this.LogButton.Label = global::Mono.Unix.Catalog.GetString("Log");
+            this.vbox2.Add(LogButton);
+            var child = ((global::Gtk.Box.BoxChild)(this.vbox2[this.LogButton]));
+            child.Position = 3;
+            child.Expand = false;
+            child.Fill = false;
+
             // Container child vbox2.Gtk.Box+BoxChild
             this.RepeatToggle = new global::Gtk.CheckButton();
             this.RepeatToggle.CanFocus = true;
@@ -167,7 +182,7 @@ namespace TouchMPCGtk
             this.vbox2.Add(this.RepeatToggle);
             global::Gtk.Box.BoxChild w13 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.RepeatToggle]));
             w13.PackType = ((global::Gtk.PackType)(1));
-            w13.Position = 3;
+            w13.Position = 4;
             w13.Expand = false;
             w13.Fill = false;
             // Container child vbox2.Gtk.Box+BoxChild
@@ -180,7 +195,7 @@ namespace TouchMPCGtk
             this.vbox2.Add(this.ShuffleToggle);
             global::Gtk.Box.BoxChild w14 = ((global::Gtk.Box.BoxChild)(this.vbox2[this.ShuffleToggle]));
             w14.PackType = ((global::Gtk.PackType)(1));
-            w14.Position = 4;
+            w14.Position = 5;
             w14.Expand = false;
             w14.Fill = false;
             this.hbox4.Add(this.vbox2);

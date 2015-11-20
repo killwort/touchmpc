@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Linq;
 using Gtk;
+using log4net;
+using log4net.Core;
+using MusicData;
 using Ninject;
 
 namespace TouchMPCGtk
 {
     partial class MainWindow : Window
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(MainWindow));
+
         private NowPlaying nowPlayingPage = new NowPlaying();
         private Database databasePage = new Database();
         private Playlist playlistPage = new Playlist();
+        private Widget logPage;
+        private ListStore log;
         private Image playImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("play"))));
         private Image pauseImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("pause"))));
 
@@ -23,6 +30,18 @@ namespace TouchMPCGtk
             StopButton.Image("stop");
             PlayButton.Label = null;
 
+            log = new ListStore(typeof (string), typeof (string),typeof(string), typeof (string),typeof(string));
+            logPage=new Gtk.ScrolledWindow();
+            var view = new TreeView();
+            view.Model = log;
+            view.AppendColumn(new TreeViewColumn("Time", new CellRendererText(), "text", 0));
+            view.AppendColumn(new TreeViewColumn("Level", new CellRendererText(), "text", 1));
+            view.AppendColumn(new TreeViewColumn("Logger", new CellRendererText(), "text", 2));
+            view.AppendColumn(new TreeViewColumn("Message", new CellRendererText(), "text", 3));
+            view.AppendColumn(new TreeViewColumn("Exception", new CellRendererText(), "text", 4));
+            ((ScrolledWindow)logPage).Add(view);
+
+
             NextButton.Clicked += Next_Click;
             StopButton.Clicked +=Stop_Click;
             PlayButton.Clicked += PlayPause_Click;
@@ -30,11 +49,12 @@ namespace TouchMPCGtk
             NowPlayingButton.Clicked += NowPlaying_Click;
             DatabaseButton.Clicked += Database_Click;
             PlaylistButton.Clicked += Playlist_Click;
+            LogButton.Clicked += LogButton_Clicked;
             ShuffleToggle.Clicked += cbShuffle_CheckedChanged;
             RepeatToggle.Clicked += cbRepeat_CheckedChanged;
 
-            Program.Kernel.Bind<LyricsCore.Display>().ToConstant(nowPlayingPage.LyricsDisplay);
-            Program.Kernel.Get<LyricsCore.Engine>();
+            Program.Kernel.Bind<Display>().ToConstant(nowPlayingPage.LyricsDisplay);
+            Program.Kernel.Get<Engine>();
             nowPlayingPage.UpdateStatus();
             switch (TouchMPCGtk.Settings.Default.LastPage)
             {
@@ -47,12 +67,17 @@ namespace TouchMPCGtk
                 default:
                     SwitchPage(nowPlayingPage);
                     break;
-
             }
+        }
+
+        private void LogButton_Clicked(object sender, EventArgs e)
+        {
+            SwitchPage(logPage);
         }
 
         private void NowPlayingPage_SongChanged(object sender, MpdFileInfo e)
         {
+            Logger.Debug("Song change");
             playlistPage.Follow(e);
             Title = string.Format("{0} from {1} by {2}", e.Title, e.Album, e.Artist);
         }
@@ -60,6 +85,7 @@ namespace TouchMPCGtk
         private bool selfSetting = false;
         private void NowPlayingPage_StateChanged(object sender, System.Collections.Generic.Dictionary<string, string> e)
         {
+            Logger.Debug("State change");
             selfSetting = true;
             string val;
             if (!e.TryGetValue("repeat", out val)) val = "0";
@@ -73,6 +99,7 @@ namespace TouchMPCGtk
         }
         private void SwitchPage(Widget newPage)
         {
+            Logger.DebugFormat("Switching to page {0}", newPage.GetType().Name);
             var viewBase = newPage as ViewBase;
 
             foreach (var view in MainUiContainer.Children.OfType<ViewBase>())
@@ -151,11 +178,6 @@ namespace TouchMPCGtk
             MpdClient.GetSharedClient().Stop();
         }
 
-        private void MainWindow_Shown(object sender, EventArgs e)
-        {
-            SwitchPage(nowPlayingPage);
-        }
-
         private void cbShuffle_CheckedChanged(object sender, EventArgs e)
         {
             if (selfSetting) return;
@@ -166,6 +188,11 @@ namespace TouchMPCGtk
         {
             if (selfSetting) return;
             MpdClient.GetSharedClient().Repeat(RepeatToggle.Active);
+        }
+
+        public void PushLog(LoggingEvent loggingEvent)
+        {
+            log.AppendValues(loggingEvent.TimeStamp.ToString("HH:mm:ss"), loggingEvent.Level.ToString(), loggingEvent.LoggerName, loggingEvent.MessageObject.ToString(), loggingEvent.ExceptionObject != null ? loggingEvent.ExceptionObject.ToString() : "");
         }
     }
 }

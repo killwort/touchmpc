@@ -4,14 +4,17 @@ using System.IO;
 using System.Threading;
 using Gdk;
 using Gtk;
-using LyricsCore;
+using log4net;
+using MusicData;
 using Ninject;
-using Display = LyricsCore.Display;
+using Display = MusicData.Display;
 
 namespace TouchMPCGtk
 {
     partial class NowPlaying : ViewBase
     {
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(NowPlaying));
+
         public NowPlaying()
         {
             LyricsDisplay = new DisplayProxy(this);
@@ -28,7 +31,7 @@ namespace TouchMPCGtk
             {IsBackground = true}.Start();
         }
 
-        private class DisplayProxy : Display
+        private class DisplayProxy : MusicData.Display
         {
             private readonly TouchMPCGtk.NowPlaying _nowPlaying;
 
@@ -50,6 +53,7 @@ namespace TouchMPCGtk
 
         private void DisplayAlbumArt(AlbumArt albumArt)
         {
+            Logger.Debug("Displaying album art");
             Application.Invoke(delegate
             {
                 if (Art.Pixbuf != null)
@@ -60,7 +64,7 @@ namespace TouchMPCGtk
                 if (albumArt != null && albumArt.ImageData != null)
                     try
                     {
-                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),480/3, 480 / 3);
+                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),480/3, 480/ 3);
                     }
                     catch
                     {
@@ -70,6 +74,7 @@ namespace TouchMPCGtk
 
         private void DisplayLyrics(Lyric lyric)
         {
+            Logger.Debug("Displaying lyrics");
             Application.Invoke(delegate
             {
                 Lyrics.Buffer.Text = lyric.Text.Replace("\n", "\r\n");
@@ -80,9 +85,9 @@ namespace TouchMPCGtk
 
         public void UpdateStatus()
         {
+            Logger.Debug("Status update");
             Application.Invoke(delegate
             {
-
                 var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
                 Album.Text = rv.Album;
                 Artist.Text = rv.Artist;
@@ -97,11 +102,6 @@ namespace TouchMPCGtk
         }
         public event EventHandler<Dictionary<string, string>> PlayStateChanged;
         public event EventHandler<MpdFileInfo> SongChanged;
-        private void NowPlaying_Resize(object sender, EventArgs e)
-        {
-            /*pnlStatic.Height = Width / 4;
-            albumArt.Width = Width / 4;*/
-        }
 
         protected virtual void OnPlayStateChanged(Dictionary<string, string> e)
         {
