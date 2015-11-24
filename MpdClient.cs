@@ -224,12 +224,19 @@ namespace TouchMPCGtk
             return null;
         }
 
-        public void Idle()
+        public void Idle(int timeout=1000)
         {
             var tcp = GetTcpClient();
-            tcp.ReceiveTimeout = 0;
+            tcp.ReceiveTimeout = timeout;
             Send("idle");
-            Receive();
+            try
+            {
+                Receive();
+            }
+            catch (IOException e)
+            {
+                ConnectionFailure(true);
+            }
         }
 
         public void Previous()

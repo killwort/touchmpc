@@ -15,6 +15,7 @@ namespace TouchMPCGtk
         private NowPlaying nowPlayingPage = new NowPlaying();
         private Database databasePage = new Database();
         private Playlist playlistPage = new Playlist();
+        private TreeView logView;
         private Widget logPage;
         private ListStore log;
         private Image playImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("play"))));
@@ -32,14 +33,14 @@ namespace TouchMPCGtk
 
             log = new ListStore(typeof (string), typeof (string),typeof(string), typeof (string),typeof(string));
             logPage=new Gtk.ScrolledWindow();
-            var view = new TreeView();
-            view.Model = log;
-            view.AppendColumn(new TreeViewColumn("Time", new CellRendererText(), "text", 0));
-            view.AppendColumn(new TreeViewColumn("Level", new CellRendererText(), "text", 1));
-            view.AppendColumn(new TreeViewColumn("Logger", new CellRendererText(), "text", 2));
-            view.AppendColumn(new TreeViewColumn("Message", new CellRendererText(), "text", 3));
-            view.AppendColumn(new TreeViewColumn("Exception", new CellRendererText(), "text", 4));
-            ((ScrolledWindow)logPage).Add(view);
+            logView = new TreeView();
+            logView.Model = log;
+            logView.AppendColumn(new TreeViewColumn("Time", new CellRendererText(), "text", 0));
+            logView.AppendColumn(new TreeViewColumn("Level", new CellRendererText(), "text", 1));
+            logView.AppendColumn(new TreeViewColumn("Logger", new CellRendererText(), "text", 2));
+            logView.AppendColumn(new TreeViewColumn("Message", new CellRendererText(), "text", 3));
+            logView.AppendColumn(new TreeViewColumn("Exception", new CellRendererText(), "text", 4));
+            ((ScrolledWindow)logPage).Add(logView);
 
 
             NextButton.Clicked += Next_Click;
@@ -193,6 +194,7 @@ namespace TouchMPCGtk
         public void PushLog(LoggingEvent loggingEvent)
         {
             log.AppendValues(loggingEvent.TimeStamp.ToString("HH:mm:ss"), loggingEvent.Level.ToString(), loggingEvent.LoggerName, loggingEvent.MessageObject.ToString(), loggingEvent.ExceptionObject != null ? loggingEvent.ExceptionObject.ToString() : "");
+            logView.Model = log;
         }
     }
 }

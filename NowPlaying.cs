@@ -24,11 +24,55 @@ namespace TouchMPCGtk
                 var myClient = new MpdClient();
                 while (true)
                 {
-                    myClient.Idle();
+                    try
+                    {
+                        myClient.Idle(10000);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warn("Exception in IDLE loop", e);
+                    }
                     UpdateStatus();
                 }
             })
             {IsBackground = true}.Start();
+            Art.SizeAllocated += Art_SizeAllocated;
+            SizeAllocated += NowPlaying_SizeAllocated;
+        }
+
+        private void NowPlaying_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            hpaned1.Position = args.Allocation.Width/2;
+        }
+
+        private void Art_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            DisplayAlbumArt(args.Allocation.Width,args.Allocation.Height);
+        }
+
+        private byte[] lastArt,lastLastArt;
+        private int lastW=0, lastH = 0;
+        private void DisplayAlbumArt(int w,int h)
+        {
+            if (lastArt == lastLastArt && w == lastW && h == lastH) return;
+            lastW = w;
+            lastH = h;
+            lastLastArt = lastArt;
+            if (Art.Pixbuf != null)
+            {
+                Art.Pixbuf.Dispose();
+                Art.Pixbuf = null;
+            }
+
+            if (lastArt != null)
+                try
+                {
+                    Art.Pixbuf = new Pixbuf(new MemoryStream(lastArt), w, h);
+                }
+                catch(Exception e)
+                {
+                    Logger.Fatal("Error displaying art",e);
+                }
         }
 
         private class DisplayProxy : MusicData.Display
@@ -56,19 +100,9 @@ namespace TouchMPCGtk
             Logger.Debug("Displaying album art");
             Application.Invoke(delegate
             {
-                if (Art.Pixbuf != null)
-                {
-                    Art.Pixbuf.Dispose();
-                    Art.Pixbuf = null;
-                }
-                if (albumArt != null && albumArt.ImageData != null)
-                    try
-                    {
-                        Art.Pixbuf = new Pixbuf(new MemoryStream(albumArt.ImageData),480/3, 480/ 3);
-                    }
-                    catch
-                    {
-                    }
+                lastArt = albumArt != null ? albumArt.ImageData : null;
+                var size=Art.Allocation;
+                DisplayAlbumArt(size.Width,size.Height);
             });
         }
 
