@@ -75,6 +75,7 @@ namespace TouchMPCGtk
         {
             SwitchPage(logPage);
         }
+        
 
         private void NowPlayingPage_SongChanged(object sender, MpdFileInfo e)
         {

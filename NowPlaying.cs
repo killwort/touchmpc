@@ -116,13 +116,17 @@ namespace TouchMPCGtk
         }
 
         public Display LyricsDisplay { get; private set; }
+        private MpdFileInfo lastSong;
 
         public void UpdateStatus()
         {
+                var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
+    	    if(lastSong!=null&&rv.Path==lastSong.Path)return;
+    	    lastSong=rv;
+        
             Logger.Debug("Status update");
             Application.Invoke(delegate
             {
-                var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
                 Album.Text = rv.Album;
                 Artist.Text = rv.Artist;
                 Title.Text = rv.Title;
