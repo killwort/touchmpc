@@ -31,7 +31,7 @@ namespace TouchMPCGtk
                 {
                     try
                     {
-                        myClient.Idle(1000);
+                        myClient.Idle(10000);
                     }
                     catch (Exception e)
                     {
@@ -40,24 +40,24 @@ namespace TouchMPCGtk
                     UpdateStatus();
                 }
             })
-            {IsBackground = true}.Start();
+            { IsBackground = true }.Start();
             Art.SizeAllocated += Art_SizeAllocated;
             SizeAllocated += NowPlaying_SizeAllocated;
         }
 
         private void NowPlaying_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            hpaned1.Position = args.Allocation.Width/2;
+            hpaned1.Position = args.Allocation.Width / 2;
         }
 
         private void Art_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            DisplayAlbumArt(args.Allocation.Width,args.Allocation.Height);
+            DisplayAlbumArt(args.Allocation.Width, args.Allocation.Height);
         }
 
-        private byte[] lastArt,lastLastArt;
-        private int lastW=0, lastH = 0;
-        private void DisplayAlbumArt(int w,int h)
+        private byte[] lastArt, lastLastArt;
+        private int lastW = 0, lastH = 0;
+        private void DisplayAlbumArt(int w, int h)
         {
             if (lastArt == lastLastArt && w == lastW && h == lastH) return;
             lastW = w;
@@ -74,9 +74,9 @@ namespace TouchMPCGtk
                 {
                     Art.Pixbuf = new Pixbuf(new MemoryStream(lastArt), w, h);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Logger.Fatal("Error displaying art",e);
+                    Logger.Fatal("Error displaying art", e);
                 }
         }
 
@@ -106,8 +106,8 @@ namespace TouchMPCGtk
             Application.Invoke(delegate
             {
                 lastArt = albumArt != null ? albumArt.ImageData : null;
-                var size=Art.Allocation;
-                DisplayAlbumArt(size.Width,size.Height);
+                var size = Art.Allocation;
+                DisplayAlbumArt(size.Width, size.Height);
             });
         }
 
@@ -121,26 +121,35 @@ namespace TouchMPCGtk
         }
 
         public Display LyricsDisplay { get; private set; }
-        private MpdFileInfo lastSong;
+        private MpdFileInfo _lastSong;
+        private string _lastState;
 
         public void UpdateStatus()
         {
-                var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
-    	    if(lastSong!=null&&rv.Path==lastSong.Path)return;
-    	    lastSong=rv;
-        
+            var rv = MpdClient.GetSharedClient().CurrentSong() ?? new MpdFileInfo();
+            var newState = MpdClient.GetSharedClient().Status();
+            var oldSong = _lastSong != null && rv.Path == _lastSong.Path;
+            string xState;
+            newState.TryGetValue("state", out xState);
+            var oldState = xState == _lastState;
+            if (oldSong && oldState) return;
+            _lastSong = rv;
+            _lastState = newState["state"];
+
             Logger.Debug("Status update");
             Application.Invoke(delegate
             {
                 Album.Text = rv.Album;
                 Artist.Text = rv.Artist;
                 Title.Text = rv.Title;
-                ((PlayerChangeForwarder) Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album,
+                ((PlayerChangeForwarder)Program.Kernel.Get<PlayerInteraction>()).PushSongChange(rv.Artist, rv.Album,
                     rv.Title, rv.Path);
                 Art.Pixbuf = null;
                 Lyrics.Buffer.Text = "";
-                OnPlayStateChanged(MpdClient.GetSharedClient().Status());
-                OnSongChanged(rv);
+                if (!oldState)
+                    OnPlayStateChanged(newState);
+                if (!oldSong)
+                    OnSongChanged(rv);
             });
         }
         public event EventHandler<Dictionary<string, string>> PlayStateChanged;
