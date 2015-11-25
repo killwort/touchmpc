@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Linq;
+using Gdk;
 using Gtk;
 using log4net;
 using log4net.Core;
 using MusicData;
 using Ninject;
+using Pango;
+using Display = MusicData.Display;
+using Image = Gtk.Image;
+using Window = Gtk.Window;
+using WindowType = Gtk.WindowType;
 
 namespace TouchMPCGtk
 {
@@ -15,9 +21,6 @@ namespace TouchMPCGtk
         private NowPlaying nowPlayingPage = new NowPlaying();
         private Database databasePage = new Database();
         private Playlist playlistPage = new Playlist();
-        private TreeView logView;
-        private Widget logPage;
-        private ListStore log;
         private Image playImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("play"))));
         private Image pauseImage = new Image(new Gdk.Pixbuf(new System.IO.MemoryStream((byte[])Resources.ResourceManager.GetObject("pause"))));
 
@@ -30,18 +33,10 @@ namespace TouchMPCGtk
             NextButton.Image("next");
             StopButton.Image("stop");
             PlayButton.Label = null;
-
-            log = new ListStore(typeof (string), typeof (string),typeof(string), typeof (string),typeof(string));
-            logPage=new Gtk.ScrolledWindow();
-            logView = new TreeView();
-            logView.Model = log;
-            logView.AppendColumn(new TreeViewColumn("Time", new CellRendererText(), "text", 0));
-            logView.AppendColumn(new TreeViewColumn("Level", new CellRendererText(), "text", 1));
-            logView.AppendColumn(new TreeViewColumn("Logger", new CellRendererText(), "text", 2));
-            logView.AppendColumn(new TreeViewColumn("Message", new CellRendererText(), "text", 3));
-            logView.AppendColumn(new TreeViewColumn("Exception", new CellRendererText(), "text", 4));
-            ((ScrolledWindow)logPage).Add(logView);
-
+            NowPlayingButton.Image("nowplaying");
+            PlaylistButton.Image("playlist");
+            DatabaseButton.Image("database");
+            
 
             NextButton.Clicked += Next_Click;
             StopButton.Clicked +=Stop_Click;
@@ -50,7 +45,6 @@ namespace TouchMPCGtk
             NowPlayingButton.Clicked += NowPlaying_Click;
             DatabaseButton.Clicked += Database_Click;
             PlaylistButton.Clicked += Playlist_Click;
-            LogButton.Clicked += LogButton_Clicked;
             ShuffleToggle.Clicked += cbShuffle_CheckedChanged;
             RepeatToggle.Clicked += cbRepeat_CheckedChanged;
 
@@ -70,12 +64,6 @@ namespace TouchMPCGtk
                     break;
             }
         }
-
-        private void LogButton_Clicked(object sender, EventArgs e)
-        {
-            SwitchPage(logPage);
-        }
-        
 
         private void NowPlayingPage_SongChanged(object sender, MpdFileInfo e)
         {
@@ -190,12 +178,6 @@ namespace TouchMPCGtk
         {
             if (selfSetting) return;
             MpdClient.GetSharedClient().Repeat(RepeatToggle.Active);
-        }
-
-        public void PushLog(LoggingEvent loggingEvent)
-        {
-            log.AppendValues(loggingEvent.TimeStamp.ToString("HH:mm:ss"), loggingEvent.Level.ToString(), loggingEvent.LoggerName, loggingEvent.MessageObject.ToString(), loggingEvent.ExceptionObject != null ? loggingEvent.ExceptionObject.ToString() : "");
-            logView.Model = log;
         }
     }
 }

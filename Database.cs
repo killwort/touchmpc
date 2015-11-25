@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Gdk;
 using Gtk;
-using Action = Gtk.Action;
 
 namespace TouchMPCGtk
 {

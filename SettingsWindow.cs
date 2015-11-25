@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Gtk;
 
 namespace TouchMPCGtk
 {
-    partial class SettingsWindow:Gtk.Window
+    partial class SettingsWindow:Window
     {
         public SettingsWindow() : base(WindowType.Toplevel)
         {

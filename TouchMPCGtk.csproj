@@ -38,17 +38,21 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp">
-      <Private>False</Private>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\atk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gdk-sharp">
-      <Private>False</Private>
+    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gdk-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="glib-sharp">
-      <Private>False</Private>
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\glib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="gtk-sharp">
-      <Private>False</Private>
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\gtk-sharp.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.14.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>packages\log4net.2.0.4\lib\net45-full\log4net.dll</HintPath>
@@ -58,9 +62,9 @@
       <HintPath>packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="pango-sharp, Version=3.0.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <HintPath>packages\GtkSharp.3.1.2\lib\net45\pango-sharp.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\GtkSharp\2.12\lib\gtk-sharp-2.0\pango-sharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,7 +79,6 @@
   <ItemGroup>
     <Compile Include="Catalog.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="UiLogAppender.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -123,8 +126,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +153,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\repeat.png" />
+    <Content Include="Resources\shuffle.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\TouchMPC\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets" Condition="Exists('..\TouchMPC\packages\GtkSharp.3.1.2\build\net45\GtkSharp.targets')" />

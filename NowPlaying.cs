@@ -7,6 +7,7 @@ using Gtk;
 using log4net;
 using MusicData;
 using Ninject;
+using Pango;
 using Display = MusicData.Display;
 
 namespace TouchMPCGtk
@@ -19,6 +20,10 @@ namespace TouchMPCGtk
         {
             LyricsDisplay = new DisplayProxy(this);
             Build();
+            Title.ModifyFont(new FontDescription()
+            {
+                AbsoluteSize = 16 * Pango.Scale.PangoScale
+            });
             new Thread(() =>
             {
                 var myClient = new MpdClient();
@@ -26,7 +31,7 @@ namespace TouchMPCGtk
                 {
                     try
                     {
-                        myClient.Idle(10000);
+                        myClient.Idle(1000);
                     }
                     catch (Exception e)
                     {
@@ -75,11 +80,11 @@ namespace TouchMPCGtk
                 }
         }
 
-        private class DisplayProxy : MusicData.Display
+        private class DisplayProxy : Display
         {
-            private readonly TouchMPCGtk.NowPlaying _nowPlaying;
+            private readonly NowPlaying _nowPlaying;
 
-            public DisplayProxy(TouchMPCGtk.NowPlaying nowPlaying)
+            public DisplayProxy(NowPlaying nowPlaying)
             {
                 _nowPlaying = nowPlaying;
             }

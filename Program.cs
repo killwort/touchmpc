@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GLib;
 using Gtk;
 using log4net;
@@ -22,9 +18,10 @@ namespace TouchMPCGtk
         {
             XmlConfigurator.Configure();
             Kernel = new StandardKernel(new LyricsModule(), new TouchMPCModule());
+
             try
             {
-                GLib.ExceptionManager.UnhandledException += ExceptionManager_UnhandledException;
+                ExceptionManager.UnhandledException += ExceptionManager_UnhandledException;
                 Application.Init();
 
                 Action run = () =>

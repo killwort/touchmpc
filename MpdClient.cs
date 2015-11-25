@@ -4,51 +4,53 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using log4net;
 
 namespace TouchMPCGtk
 {
     public class MpdClient
     {
+        private static int _lastId = 0;
+        private readonly int _id;
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(MpdClient));
         private static MpdClient _sharedClientInstance;
         public static MpdClient GetSharedClient()
         {
             return _sharedClientInstance ?? (_sharedClientInstance = new MpdClient());
         }
 
-        //private IPEndPoint ipEndPoint;
-        private TcpClient tcpClient;
-        private object connection=new object();
-        private object execution = new object();
-        private static Encoding protocolEncoding = new UTF8Encoding(false);
-        /*public MpdClient(IPEndPoint ipEndPoint)
+        public MpdClient()
         {
-            this.ipEndPoint = ipEndPoint;
+            _id = _lastId++;
         }
 
-        public MpdClient(MpdClient @base)
-        {
-            ipEndPoint = @base.ipEndPoint;
-        }*/
+        private TcpClient _tcpClient;
+        private readonly object _connectionLock = new object();
+        private readonly object _executionLock = new object();
+        private static readonly Encoding ProtocolEncoding = new UTF8Encoding(false);
 
         private void Send(string command)
         {
-            using (var writer = new StreamWriter(GetTcpClient().GetStream().AsUnclosable(),protocolEncoding))
+            Logger.DebugFormat("{0}: send {1}", _id, command);
+            using (var writer = new StreamWriter(GetTcpClient().GetStream().AsUnclosable(), ProtocolEncoding))
                 writer.WriteLine(command);
         }
 
-        private Tuple<List<string>,string> Receive()
+        private Tuple<List<string>, string> Receive()
         {
             string line;
             List<string> rv = new List<string>();
-            using (var reader = new StreamReader(GetTcpClient().GetStream().AsUnclosable(), protocolEncoding))
-                while ((line=reader.ReadLine())!=null && !line.StartsWith("OK") && !line.StartsWith("ACK"))
+            using (var reader = new StreamReader(GetTcpClient().GetStream().AsUnclosable(), ProtocolEncoding))
+                while ((line = reader.ReadLine()) != null && !line.StartsWith("OK") && !line.StartsWith("ACK"))
                     rv.Add(line);
+            Logger.DebugFormat("{0}: Receive success: {1}", _id, line);
+
             return Tuple.Create(rv, line);
         }
 
         public Tuple<List<string>, string> Execute(string command)
         {
-            lock (execution)
+            lock (_executionLock)
             {
                 while (true)
                 {
@@ -57,7 +59,7 @@ namespace TouchMPCGtk
                         Send(command);
                         return Receive();
                     }
-                    catch (IOException)
+                    catch (IOException e)
                     {
                         ConnectionFailure(true);
                     }
@@ -67,26 +69,27 @@ namespace TouchMPCGtk
 
         private TcpClient GetTcpClient()
         {
-            lock (connection)
+            lock (_connectionLock)
             {
-                if (tcpClient != null && tcpClient.Connected)
-                    return tcpClient;
-                if (tcpClient != null)
-                    tcpClient.Close();
-                var client = new TcpClient(Settings.Default.MpdHostname,Settings.Default.MpdPort)
+                if (_tcpClient != null && _tcpClient.Connected)
+                    return _tcpClient;
+                if (_tcpClient != null)
+                    _tcpClient.Close();
+                var client = new TcpClient(Settings.Default.MpdHostname, Settings.Default.MpdPort)
                 {
                     ReceiveTimeout = 5000,
                     SendTimeout = 5000
                 };
-                tcpClient = client;
+                Logger.DebugFormat("{0}: New connection", _id);
+                _tcpClient = client;
             }
             Receive();
-            return tcpClient;
+            return _tcpClient;
         }
 
         public List<MpdFileInfo> ListFiles(string path)
         {
-            var items = Execute(string.Format("listfiles \"{0}\"",path));
+            var items = Execute(string.Format("listfiles \"{0}\"", path));
             if (items.Item2 != "OK")
             {
                 ConnectionFailure(false);
@@ -138,10 +141,10 @@ namespace TouchMPCGtk
         private void ConnectionFailure(bool networkError)
         {
             if (networkError)
-                lock (connection)
+                lock (_connectionLock)
                 {
-                    tcpClient.Close();
-                    tcpClient = null;
+                    _tcpClient.Close();
+                    _tcpClient = null;
                 }
         }
 
@@ -159,13 +162,13 @@ namespace TouchMPCGtk
 
         public void Play(int index)
         {
-            if (Execute(string.Format("play \"{0}\"",index)).Item2 != "OK")
+            if (Execute(string.Format("play \"{0}\"", index)).Item2 != "OK")
                 ConnectionFailure(false);
         }
 
         public void RemoveFromPlaylist(int index)
         {
-            if (Execute(string.Format("delete \"{0}\"",index)).Item2 != "OK")
+            if (Execute(string.Format("delete \"{0}\"", index)).Item2 != "OK")
                 ConnectionFailure(false);
         }
 
@@ -178,7 +181,7 @@ namespace TouchMPCGtk
                 return new List<MpdFileInfo>();
             }
             var files = new List<MpdFileInfo>();
-            ParseListing("",items,files);
+            ParseListing("", items, files);
             return files;
         }
 
@@ -190,7 +193,7 @@ namespace TouchMPCGtk
 
         public Dictionary<string, string> Status()
         {
-            return Execute("status").Item1.Select(x => x.Split(new[] {':'}, 2)).ToDictionary(x => x[0], x => x[1].TrimStart(' '));
+            return Execute("status").Item1.Select(x => x.Split(new[] { ':' }, 2)).ToDictionary(x => x[0], x => x[1].TrimStart(' '));
         }
 
         public void Unpause()
@@ -218,24 +221,42 @@ namespace TouchMPCGtk
         {
             var rv = new List<MpdFileInfo>();
             var items = Execute("currentsong");
-            ParseListing("",items,rv);
+            ParseListing("", items, rv);
             if (rv.Any())
                 return rv.First();
             return null;
         }
 
-        public void Idle(int timeout=1000)
+        public void Idle(int timeout = 1000)
         {
-            var tcp = GetTcpClient();
-            tcp.ReceiveTimeout = timeout;
-            Send("idle");
-            try
+            while (true)
             {
-                Receive();
-            }
-            catch (IOException e)
-            {
-                ConnectionFailure(true);
+                var tcp = GetTcpClient();
+                tcp.ReceiveTimeout = timeout;
+                Send("idle");
+                try
+                {
+                    Receive();
+                    break;
+                }
+                catch (IOException e)
+                {
+                    var innerException = e.InnerException as SocketException;
+                    if (innerException != null && innerException.SocketErrorCode == SocketError.TimedOut)
+                    {
+                        try
+                        {
+                            Send("noidle");
+                            Receive();
+                        }
+                        catch
+                        {
+                            ConnectionFailure(true);
+                        }
+                    }
+                    else
+                        ConnectionFailure(true);
+                }
             }
         }
 
@@ -247,7 +268,7 @@ namespace TouchMPCGtk
 
         public void Random(bool state)
         {
-            if (Execute(string.Format("random {0}",state?1:0)).Item2 != "OK")
+            if (Execute(string.Format("random {0}", state ? 1 : 0)).Item2 != "OK")
                 ConnectionFailure(false);
         }
         public void Repeat(bool state)
@@ -268,7 +289,7 @@ namespace TouchMPCGtk
         public const string TypeFile = "file";
         public const string TypeFolder = "directory";
         public const string TypeParent = "_parent";
-        public string Name,Path;
+        public string Name, Path;
         public string Type;
         public string LastModified;
         public string Artist { get; set; }

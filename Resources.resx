@@ -142,4 +142,20 @@
   <data name="up" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\up.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="nowplaying" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\song.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="playlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\playlist.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="database" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\folder.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="shuffle" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\shuffle.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="repeat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\repeat.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+
 </root>

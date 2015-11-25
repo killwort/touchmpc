@@ -63,6 +63,16 @@ namespace TouchMPCGtk {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] database {
+            get {
+                object obj = ResourceManager.GetObject("database", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
@@ -76,6 +86,16 @@ namespace TouchMPCGtk {
         internal static byte[] next {
             get {
                 object obj = ResourceManager.GetObject("next", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] nowplaying {
+            get {
+                object obj = ResourceManager.GetObject("nowplaying", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -103,9 +123,39 @@ namespace TouchMPCGtk {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] playlist {
+            get {
+                object obj = ResourceManager.GetObject("playlist", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] prev {
             get {
                 object obj = ResourceManager.GetObject("prev", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] repeat {
+            get {
+                object obj = ResourceManager.GetObject("repeat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] shuffle {
+            get {
+                object obj = ResourceManager.GetObject("shuffle", resourceCulture);
                 return ((byte[])(obj));
             }
         }
