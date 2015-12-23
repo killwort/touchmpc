@@ -31,7 +31,7 @@ namespace TouchMPCGtk
                 {
                     try
                     {
-                        myClient.Idle(10000);
+                        myClient.Idle(1000);
                     }
                     catch (Exception e)
                     {
@@ -103,7 +103,8 @@ namespace TouchMPCGtk
         private void DisplayAlbumArt(AlbumArt albumArt)
         {
             Logger.Debug("Displaying album art");
-            Application.Invoke(delegate
+            if (_lastSong != null && albumArt.OriginalMetadata.Title == _lastSong.Title)
+                Application.Invoke(delegate
             {
                 lastArt = albumArt != null ? albumArt.ImageData : null;
                 var size = Art.Allocation;
@@ -114,6 +115,7 @@ namespace TouchMPCGtk
         private void DisplayLyrics(Lyric lyric)
         {
             Logger.Debug("Displaying lyrics");
+            if(_lastSong!=null&&lyric.OriginalMetadata.Title==_lastSong.Title)
             Application.Invoke(delegate
             {
                 Lyrics.Buffer.Text = lyric.Text.Replace("\n", "\r\n");
@@ -134,7 +136,7 @@ namespace TouchMPCGtk
             var oldState = xState == _lastState;
             if (oldSong && oldState) return;
             _lastSong = rv;
-            _lastState = newState["state"];
+            _lastState = xState;
 
             Logger.Debug("Status update");
             Application.Invoke(delegate

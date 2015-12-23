@@ -294,7 +294,14 @@ namespace TouchMPCGtk
         public string LastModified;
         public string Artist { get; set; }
         public string AlbumArtist { get; set; }
-        public string Title { get; set; }
+
+        private string _title;
+        public string Title
+        {
+            get { return string.IsNullOrEmpty(_title) ? System.IO.Path.GetFileNameWithoutExtension(Path) : _title; }
+            set { _title = value; }
+        }
+
         public string Album { get; set; }
         public int Time { get; set; }
         public string Id { get; set; }
