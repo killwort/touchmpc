@@ -12,6 +12,7 @@ namespace TouchMPCGtk
             Bind<MetadataTransformer>().To<NullMetadataTransformer>();
             Bind<MusicData.Database>().To<FilesystemDatabase>();
 
+            Bind<Fetcher<Lyric>>().To<LyricWikiLyricFetcher>();
             Bind<Fetcher<Lyric>>().To<LyricsComLyricFetcher>();
             Bind<Fetcher<Lyric>>().To<DarkLyricsLyricFetcher>();
             Bind<Fetcher<Lyric>>().To<Lyrics123LyricFetcher>();

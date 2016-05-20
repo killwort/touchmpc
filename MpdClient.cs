@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using log4net;
 
 namespace TouchMPCGtk
@@ -41,8 +43,18 @@ namespace TouchMPCGtk
             string line;
             List<string> rv = new List<string>();
             using (var reader = new StreamReader(GetTcpClient().GetStream().AsUnclosable(), ProtocolEncoding))
-                while ((line = reader.ReadLine()) != null && !line.StartsWith("OK") && !line.StartsWith("ACK"))
+                while (true)
+                {
+                    line = reader.ReadLine();
+                    if (line == null)
+                    {
+                        Thread.Sleep(10);
+                        continue;
+                    }
+                    if (line.StartsWith("OK") || line.StartsWith("ACK"))
+                        break;
                     rv.Add(line);
+                }
             Logger.DebugFormat("{0}: Receive success: {1}", _id, line);
 
             return Tuple.Create(rv, line);
